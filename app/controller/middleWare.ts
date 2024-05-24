@@ -77,7 +77,11 @@ export default class MiddleWareController extends Controller {
   /**
    * get transaction
    */
-  
+  public async getTransactionReceipt() {
+    const { ctx } = this;
+    logger.error('dddd');
+    ctx.body = await ctx.service.middleWare.getTransactionReceipt(ctx.request.query);
+  }
 
   /**
    * transfer
