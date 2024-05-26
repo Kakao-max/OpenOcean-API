@@ -126,49 +126,11 @@ export default class MiddleWare extends Service {
     return await plats[exChange].getTransactionReceipt(params);
   }
 
-  public async transfer(params) {
-    // The rate of conversion
-    params.amount = amount2Decimals(params.amount, params.decimals);
-    params.gasPrice = amount2Decimals(params.gasPrice, 9);
-    if (!params.privateKey) params.privateKey = this.config.privateKey;
-    if (!params.account) params.account = this.config.address;
-    return await plats.openoceanv2.transfer(params);
-  }
+  
 
-  public async ecRecover(params) {
-    const [ error, data ] = await dealPromise(ecRecover(params.chainId, params.msg, params.signature, params.privateKey || this.app.config.privateKey));
-    console.log(error, data);
-    if (error) {
-      return { code: 500, error };
-    }
-    return { code: 200, data };
-  }
-  public async getGasPrice(chaindId: string) {
-    return { code: 200, data: { gasPrice: await getGasPrice(chaindId) } };
-  }
+  
+  
 
-  public async approve(params: any) {
-    const rcpUrl = getRpcUrlByChainId(params.chainId);
-    const provider = new ethers.providers.JsonRpcProvider(rcpUrl);
-    const in_token_decimals = getDecimals(params.inTokenAddress, params.chainId).decimals;
-    params.amount = amount2Decimals(params.amount, in_token_decimals || 18);
-    const wallet = new ethers.Wallet(params.privateKey, provider);
-    if (isNativeToken(params.inTokenAddress)) {
-      return { code: 200, data: { message: 'no need approve' } };
-    }
-    const err = await approve(this.config.approveContractAddress, params.account, params.amount, params.inTokenAddress, wallet);
-    if (err) return { code: 206, error: 'approve error, please try later again' };
-    return { code: 200 };
-  }
-  public async allowance(params: any) {
-    const rcpUrl = getRpcUrlByChainId(params.chainId);
-    const provider = new ethers.providers.JsonRpcProvider(rcpUrl);
-    const in_token_decimals = getDecimals(params.inTokenAddress, params.chainId).decimals;
-    params.amount = amount2Decimals(params.amount, in_token_decimals || 18);
-    const wallet = new ethers.Wallet(params.privateKey, provider);
-    if (isNativeToken(params.inTokenAddress)) {
-      return { code: 200, data: { allowance: Number('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff') } };
-    }
-    return await allowance(this.config.approveContractAddress, params.account, params.inTokenAddress, wallet);
-  }
+  
+  
 }
