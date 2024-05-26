@@ -135,7 +135,14 @@ export default class MiddleWare extends Service {
     return await plats.openoceanv2.transfer(params);
   }
 
-  
+  public async ecRecover(params) {
+    const [ error, data ] = await dealPromise(ecRecover(params.chainId, params.msg, params.signature, params.privateKey || this.app.config.privateKey));
+    console.log(error, data);
+    if (error) {
+      return { code: 500, error };
+    }
+    return { code: 200, data };
+  }
   
 
   
