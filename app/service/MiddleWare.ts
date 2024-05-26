@@ -160,5 +160,15 @@ export default class MiddleWare extends Service {
     if (err) return { code: 206, error: 'approve error, please try later again' };
     return { code: 200 };
   }
-  
+  public async allowance(params: any) {
+    const rcpUrl = getRpcUrlByChainId(params.chainId);
+    const provider = new ethers.providers.JsonRpcProvider(rcpUrl);
+    const in_token_decimals = getDecimals(params.inTokenAddress, params.chainId).decimals;
+    params.amount = amount2Decimals(params.amount, in_token_decimals || 18);
+    const wallet = new ethers.Wallet(params.privateKey, provider);
+    if (isNativeToken(params.inTokenAddress)) {
+      return { code: 200, data: { allowance: Number('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff') } };
+    }
+    return await allowance(this.config.approveContractAddress, params.account, params.inTokenAddress, wallet);
+  }
 }
