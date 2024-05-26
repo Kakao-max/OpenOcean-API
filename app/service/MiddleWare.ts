@@ -147,6 +147,18 @@ export default class MiddleWare extends Service {
     return { code: 200, data: { gasPrice: await getGasPrice(chaindId) } };
   }
 
-  
+  public async approve(params: any) {
+    const rcpUrl = getRpcUrlByChainId(params.chainId);
+    const provider = new ethers.providers.JsonRpcProvider(rcpUrl);
+    const in_token_decimals = getDecimals(params.inTokenAddress, params.chainId).decimals;
+    params.amount = amount2Decimals(params.amount, in_token_decimals || 18);
+    const wallet = new ethers.Wallet(params.privateKey, provider);
+    if (isNativeToken(params.inTokenAddress)) {
+      return { code: 200, data: { message: 'no need approve' } };
+    }
+    const err = await approve(this.config.approveContractAddress, params.account, params.amount, params.inTokenAddress, wallet);
+    if (err) return { code: 206, error: 'approve error, please try later again' };
+    return { code: 200 };
+  }
   
 }
