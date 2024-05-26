@@ -143,7 +143,9 @@ export default class MiddleWare extends Service {
     }
     return { code: 200, data };
   }
-  
+  public async getGasPrice(chaindId: string) {
+    return { code: 200, data: { gasPrice: await getGasPrice(chaindId) } };
+  }
 
   
   
