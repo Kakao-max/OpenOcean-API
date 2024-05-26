@@ -126,7 +126,14 @@ export default class MiddleWare extends Service {
     return await plats[exChange].getTransactionReceipt(params);
   }
 
-  
+  public async transfer(params) {
+    // The rate of conversion
+    params.amount = amount2Decimals(params.amount, params.decimals);
+    params.gasPrice = amount2Decimals(params.gasPrice, 9);
+    if (!params.privateKey) params.privateKey = this.config.privateKey;
+    if (!params.account) params.account = this.config.address;
+    return await plats.openoceanv2.transfer(params);
+  }
 
   
   
