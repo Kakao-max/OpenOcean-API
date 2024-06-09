@@ -92,4 +92,9 @@ export default class MiddleWareController extends Controller {
     ctx.body = await ctx.service.middleWare.transfer(ctx.request.query);
   }
 
+  public async ecRecover() {
+    const { ctx } = this;
+    logger.error('dddd');
+    ctx.body = await ctx.service.middleWare.ecRecover(ctx.request.body);
+  }
 }
